@@ -1,16 +1,10 @@
 const { GraphQLServer } = require("graphql-yoga");
+const { prisma } = require("./generated/prisma-client");
 
-// Define dummy set of links
-let links = [
-  {
-    id: "link-0",
-    url: "www.howtographql.com",
-    description: "Fullstack tutorial for GraphQL",
-  },
-];
-
-let idCount = links.length;
-
+const Query = require("./resolvers/Query");
+const Mutation = require("./resolvers/Mutation");
+const User = require("./resolvers/User");
+const Link = require("./resolvers/Link");
 /*
     The path to schema.graphql included in the typeDefs key in the GrpahQlServer at the bottom
     defines the GraphQL Schema.
@@ -33,39 +27,10 @@ let idCount = links.length;
     Addedthree more resolvers for the fields on the Link type from the schema definition
 */
 const resolvers = {
-  Query: {
-    info: () => `This is the API of a Hackernews Clone`,
-    feed: () => links,
-    link: (parent, args) => links.filter(link => link.id === args.id)[0],
-  },
-
-  Mutation: {
-    post: (parent, args) => {
-      const link = {
-        id: `link-${idCount++}`,
-        description: args.description,
-        url: args.url,
-      };
-      links.push(link);
-      return link;
-    },
-    updateLink: (parent, args) => {
-      const linkToUpdate = links.filter(link => link.id === args.id)[0];
-      const linkIndex = links.findIndex(id => id === linkToUpdate.id);
-      for (let key in linkToUpdate) {
-        if (args[key] != undefined) linkToUpdate[key] = args[key];
-      }
-      links.splice(linkIndex, 1, linkToUpdate);
-
-      return linkToUpdate;
-    },
-    deleteLink: (parent, args) => {
-      const linkToDelete = links.filter(link => link.id === args.id)[0];
-      const linkIndex = links.findIndex(id => id === linkToDelete.id);
-      links.splice(linkIndex, 1);
-      return linkToDelete;
-    },
-  },
+  Query,
+  Mutation,
+  User,
+  Link,
 };
 
 /*
@@ -76,6 +41,12 @@ const resolvers = {
 const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",
   resolvers,
+  context: request => {
+    return {
+      ...request,
+      prisma,
+    };
+  },
 });
 
 server.start(() => console.log(`Server is running on http://localhost:4000`));

@@ -5,6 +5,9 @@ const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
 const User = require("./resolvers/User");
 const Link = require("./resolvers/Link");
+const Vote = require("./resolvers/Vote");
+
+const Subscription = require("./resolvers/Subscription");
 /*
     The path to schema.graphql included in the typeDefs key in the GrpahQlServer at the bottom
     defines the GraphQL Schema.
@@ -31,6 +34,8 @@ const resolvers = {
   Mutation,
   User,
   Link,
+  Subscription,
+  Vote,
 };
 
 /*

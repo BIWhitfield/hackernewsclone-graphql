@@ -16,3 +16,9 @@ type User {
     password: String!
     links: [Link!]!
 }
+
+type Vote {
+    id: ID! @id
+    link: Link!
+    user: User!
+}

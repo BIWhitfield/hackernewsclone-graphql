@@ -27,9 +27,12 @@ type User {
   links: [Link!]!
 }
 
+scalar DateTime
+
 type Link {
   id: ID!
   description: String!
+  createdAt: DateTime!
   url: String!
   postedBy: User
   votes: [Vote!]!
